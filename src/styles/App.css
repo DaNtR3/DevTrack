@@ -1,0 +1,155 @@
+/* General Body */
+body {
+  background-color: white;
+  color: black;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header Style */
+header {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header .header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header .logo {
+  width: 150px; /* Logo width */
+  height: auto; /* Auto height to maintain aspect ratio */
+  margin-right: 15px; /* Space between logo and title */
+}
+
+header h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* Navigation Bar */
+nav {
+  margin-bottom: 10px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 6;
+}
+
+nav ul li {
+  display: inline-block;
+  margin: 0 15px;
+}
+
+nav ul li a {
+  font-family: "Bebas Neue", sans-serif;
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+}
+
+nav ul li a:hover {
+  color: #ff7b00;
+}
+
+/* Style for the dropdown menu */
+nav ul li.dropdown {
+  position: relative;
+  list-style-type: none;
+}
+
+nav ul li.dropdown .dropdown-menu {
+  display: none;  /* Hide the dropdown menu by default */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #000000;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 1000;
+  padding: 0;  /* Remove any padding */
+  margin: 0;   /* Remove any margin */
+}
+
+nav ul li.dropdown:hover .dropdown-menu {
+  display: block;  /* Show the dropdown when hovering over the parent */
+}
+
+nav ul li.dropdown .dropdown-menu li {
+  padding: 10px;
+}
+
+nav ul li.dropdown .dropdown-menu li a {
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
+}
+
+nav ul li.dropdown .dropdown-menu li a:hover {
+  color: #ff7b00;
+  border-bottom: 0.5px solid #ff7b00;
+}
+
+
+/* Footer Styles */
+.footer {
+  background-color: #000000;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 20px;
+}
+
+.footer-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.footer-nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+.footer-nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Flexbox layout to push footer to the bottom */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;  /* Ensure the app takes up at least the full viewport height */
+}
+
+/* Content area (main) should take up available space */
+main {
+  flex: 1; /* This will make the main content area grow to fill available space */
+}

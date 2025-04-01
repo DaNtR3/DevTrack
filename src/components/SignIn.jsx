@@ -1,23 +1,56 @@
-// src/components/SignIn.js
 import React, { useState } from "react";
-import { Link } from "react-router-dom";  // Import Link from react-router-dom
+import { Link } from "react-router-dom"; // Import useNavigate for redirection
+import api from '../backend/services/api';
 import "../styles/Login.css";
 
+
 function SignIn({ onLogin }) {
+
   const [cedula, setCedula] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
+    try {
+      const result = await api.login({ cedula, password});
+      
+      if (result.success) {
+        // Store user info in localStorage or context
+        localStorage.setItem('user', JSON.stringify(result.user));
+        
+        // Redirect to dashboard or home page
+        window.location.href = '/dashboard';
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+    } 
+  };
+    /*try {
+      // Send login credentials to backend
+      const response = await axios.post("/signin", { cedula, password });
 
-    // Simulate login logic (replace with actual authentication logic)
-    if (cedula === "admin" && password === "password123") {
-      onLogin(true); // Pass `true` if user is an admin
-    } else {
+      /* Store the token and role in localStorage
+      localStorage.setItem("token", response.data.token);  // Store JWT token
+      localStorage.setItem("role", response.data.role);    // Store user role (e.g., admin)
+
+      // Call the onLogin function from parent component
+      onLogin(response.data.role === "admin"); // Pass true if the user is admin
+
+      // Redirect to the dashboard or admin dashboard
+      if (response.data.role === "admin") {
+        navigate("/admin");  // Redirect to admin dashboard
+      } else {
+        navigate("/dashboard");  // Redirect to user dashboard
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
       setError("Cédula o contraseña incorrecta.");
     }
-  };
+  };*/
 
   return (
     <div className="login-page">

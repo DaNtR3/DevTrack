@@ -1,13 +1,18 @@
-import { Outlet, Navigate } from "react-router-dom";
+// src/components/utils/ProtectedRoutes.js
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoutes = () => {
+  // Check if there's a token in localStorage
+  const token = localStorage.getItem("token");
 
-  const isAuthenticated = false;
-  return isAuthenticated ? (
-    <Outlet /> // Render the child routes if authenticated
-  ) : (
-    <Navigate to="/signin" /> // Redirect to sign-in page if not authenticated
-  );
-}
+  // If there's no token, redirect to the sign-in page
+  if (!token) {
+    return <Navigate to="/signin" />;
+  }
+
+  // If there is a token, render the nested routes
+  return <Outlet />;
+};
 
 export default ProtectedRoutes;

@@ -1,6 +1,6 @@
 // src/App.js
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary routing components
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import PasswordReset from "./components/PasswordReset";
@@ -14,22 +14,30 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Check if the user is authenticated (token in localStorage)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+      // Optionally check user role, or retrieve from backend
+      const userRole = localStorage.getItem("role");
+      if (userRole === "admin") {
+        setIsAdmin(true);
+      }
+    }
+  }, []);
+
   const handleLogin = (isAdminUser) => {
     setIsAuthenticated(true); // User is logged in
-    setIsAdmin(isAdminUser); // User role (admin or not)
+    setIsAdmin(isAdminUser); // Set admin status (if user is an admin)
   };
-
-  /*if (!isAuthenticated) {
-    // If the user is not authenticated, show the sign-in page
-    return <SignIn onLogin={handleLogin} />;
-  }*/
 
   // Main application layout when the user is authenticated
   return (
-    <Router> {/* Wrap the entire app with BrowserRouter */}
+    <Router>
       <div className="App">
         <header className="header">
-          {isAdmin ? <HeaderAdmin /> : <Header />} {/* Adjust header based on admin status */}
+          {isAdmin ? <HeaderAdmin /> : <Header />}
         </header>
 
         <main>
@@ -41,16 +49,16 @@ function App() {
           <Footer />
         </footer>
 
-        {/* Routing for SignIn, SignUp, and PasswordReset */}
         <Routes>
           <Route path="/signin" element={<SignIn onLogin={handleLogin} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/passwordreset" element={<PasswordReset />} />
-          <Route element={<ProtectedRoutes />}> {/* Protected routes for authenticated users */}
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} /> {/* Protected route example */}
-            <Route path="/admin" element={<h1>Admin Dashboard</h1>} /> {/* Admin route example */}
-          </Route>
 
+          {/* Protect the routes for authenticated users */}
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/admin" element={<h1>Admin Dashboard</h1>} />
+          </Route>
         </Routes>
       </div>
     </Router>

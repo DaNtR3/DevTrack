@@ -128,3 +128,9 @@
   object-fit: cover;
   object-position: center;
 }
+
+.success {
+  color: green;
+  font-size: 20px;
+  margin-top: 10px;
+}

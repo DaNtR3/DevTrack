@@ -1,56 +1,33 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import useNavigate for redirection
-import api from '../backend/services/api';
-import "../styles/Login.css";
+import { Link, useNavigate} from "react-router-dom"; // Import useNavigate for redirection
+import api from '../../services/api'; // Import the API service
+import "../../styles/Login.css"; 
 
 
-function SignIn({ onLogin }) {
+function SignIn({setIsAuthenticated, checkAuthentication}) {
 
   const [cedula, setCedula] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+  
     try {
-      const result = await api.login({ cedula, password});
-      
+      const result = await api.login({ cedula, password });
       if (result.success) {
-        // Store user info in localStorage or context
-        localStorage.setItem('user', JSON.stringify(result.user));
+        setIsAuthenticated(true); // Update the global authentication state
+        await checkAuthentication(); // Call the checkAuthentication function
+        navigate("/home"); // Redirect to /home after role validation
         
-        // Redirect to dashboard or home page
-        window.location.href = '/dashboard';
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
       console.error('Login error:', err);
-    } 
-  };
-    /*try {
-      // Send login credentials to backend
-      const response = await axios.post("/signin", { cedula, password });
-
-      /* Store the token and role in localStorage
-      localStorage.setItem("token", response.data.token);  // Store JWT token
-      localStorage.setItem("role", response.data.role);    // Store user role (e.g., admin)
-
-      // Call the onLogin function from parent component
-      onLogin(response.data.role === "admin"); // Pass true if the user is admin
-
-      // Redirect to the dashboard or admin dashboard
-      if (response.data.role === "admin") {
-        navigate("/admin");  // Redirect to admin dashboard
-      } else {
-        navigate("/dashboard");  // Redirect to user dashboard
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setError("Cédula o contraseña incorrecta.");
     }
-  };*/
+  };
 
   return (
     <div className="login-page">
@@ -64,9 +41,14 @@ function SignIn({ onLogin }) {
           <div className="input-container">
             <label>Cédula:</label>
             <input
-              type="text"
+              type="number"
               value={cedula}
-              onChange={(e) => setCedula(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value >= 0) { // Allow only positive numbers
+                  setCedula(value);
+                }
+              }}
               required
             />
           </div>
@@ -92,7 +74,7 @@ function SignIn({ onLogin }) {
             <Link to="/signup">¿No tienes cuenta? Regístrate aquí</Link>
           </p>
           <p>
-            <Link to="/passwordreset">¿Olvidaste tu contraseña?</Link>
+            <Link to="/reset-password">¿Olvidaste tu contraseña?</Link>
           </p>
         </div>
 

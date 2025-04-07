@@ -1,0 +1,66 @@
+/* Center the navigation bar */
+.users-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    height: auto; /* Full viewport height to center vertically */
+  }
+  
+  /* Style the list of links */
+  .users-nav ul {
+    list-style: none;
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(2, 1fr); /* Fixed 2 columns */
+    grid-gap: 20px; /* Space between squares */
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Style each navigation item as a square */
+  .users-nav ul li {
+    width: 270px; /* Fixed square size */
+    height: 270px; /* Fixed square size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000; /* Yellow color for squares */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  
+  .users-nav ul li:nth-child(even) {
+    background-color:  #333; /* Red color for odd squares */
+  }
+  
+  .users-nav ul li:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+  }
+  
+ /* Style the links inside the squares */
+.users-nav ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Stack image and text vertically */
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure the link fills the square */
+}
+
+/* Style the images inside the squares */
+.users-nav ul li a img {
+  width: 120px; /* Adjust the size of the image */
+  height: 120px; /* Adjust the size of the image */
+  margin-bottom: 10px; /* Space between the image and text */
+  transition: transform 0.3s ease; /* Add a hover effect */
+}
+
+/* Hover effect for images */
+.users-nav ul li a:hover img {
+  transform: scale(1.2); /* Slightly enlarge the image on hover */
+}

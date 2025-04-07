@@ -1,0 +1,37 @@
+.not-found-container {
+    text-align: center;
+    margin-top: 100px;
+    font-family: "Bebas Neue", sans-serif;
+  }
+  
+  .not-found-container h1 {
+    font-size: 100px;
+    color: #ff7b00;
+    margin-bottom: 20px;
+  }
+  
+  .not-found-container p {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 30px;
+  }
+
+  /* Submit button */
+.login-btn {
+  width: 400px;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #ff7b00;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  font-size: 22px;
+  cursor: pointer;
+  font-family: "Bebas Neue", sans-serif;
+  text-decoration: none; 
+}
+
+.login-btn:hover {
+  background-color: #333;
+  color: #ff7b00;
+}

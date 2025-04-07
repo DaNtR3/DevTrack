@@ -1,23 +1,39 @@
 // src/components/Login.js
 import React, { useState } from "react";
-import "../styles/Login.css"; // Import the CSS file for styling
-import { Link } from "react-router-dom";
+import "../../styles/Login.css"; // Import the CSS file for styling
+import { Link, useNavigate} from "react-router-dom";
+import api from "../../services/api";
 
-function PasswordReset({ onLogin }) {
+function PasswordReset() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [cedula, setCedula] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const [newpassword, setNewPassword] = useState("");
+  const [confirmedpassword, setConfirmedPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccessMessage("");
 
-    // Simulate login logic (replace this with actual authentication)
-    if (cedula === "admin" && password === "password123") {
-      onLogin(true); // Passing `true` means the user is authenticated as admin
-    } else {
-      setError("Cédula o contraseña incorrecta.");
+    try {
+      const result = await api.resetUserPassword({
+        cedula,
+        newpassword,
+        confirmedpassword,
+      });
+      console.log("API Response:", result);
+
+      if (result.success) {
+        setSuccessMessage("¡Contraseña actualizada exitosamente!"); // Set success message
+        setTimeout(() => navigate("/signin"), 2000); // Redirect to SignIn after 2 seconds
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "No se pudo reestablecer la contraseña del usuario"
+      );
+      console.error("Password reset failed:", err);
     }
   };
 
@@ -34,37 +50,45 @@ function PasswordReset({ onLogin }) {
           <div className="input-container">
             <label>Cédula:</label>
             <input
-              type="text"
+              type="number"
               value={cedula}
-              onChange={(e) => setCedula(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value >= 0) {
+                  setCedula(value);
+                }
+              }}
               required
             />
           </div>
 
           {/* OldPassword input */}
           <div className="input-container">
-            <label>Antigua Contraseña:</label>
+            <label>Nueva Contraseña:</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newpassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               required
             />
           </div>
 
           {/* NewPassword input */}
           <div className="input-container">
-            <label>Nueva Contraseña:</label>
+            <label>Confirmar Nueva Contraseña:</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirmedpassword}
+              onChange={(e) => setConfirmedPassword(e.target.value)}
               required
             />
           </div>
 
           {/* Error message */}
           {error && <p className="error">{error}</p>}
+
+          {/* Mensaje de éxito */}
+          {successMessage && <p className="success">{successMessage}</p>}
 
           {/* Login button */}
           <button type="submit" className="login-btn">Enviar</button>

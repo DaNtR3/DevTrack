@@ -1,23 +1,45 @@
 // src/components/Login.js
 import React, { useState } from "react";
-import "../styles/Login.css"; // Import the CSS file for styling
-import { Link } from "react-router-dom";
+import "../../styles/Login.css"; // Import the CSS file for styling
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 function SignUp({ onLogin }) {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [cedula, setCedula] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccessMessage("");
 
-    // Simulate login logic (replace this with actual authentication)
-    if (cedula === "admin" && password === "password123") {
-      onLogin(true); // Passing `true` means the user is authenticated as admin
-    } else {
-      setError("Cédula o contraseña incorrecta.");
+    try {
+      const result = await api.createUser({
+        cedula,
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+      });
+      console.log("API Response:", result);
+
+      if (result.success) {
+        setSuccessMessage("¡Registro exitoso! Ahora puedes iniciar sesión."); // Set success message
+        setTimeout(() => navigate("/signin"), 2000); // Redirect to SignIn after 2 seconds
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "La creación del usuario ha fallado"
+      );
+      console.error("Create user error:", err);
     }
   };
 
@@ -28,15 +50,20 @@ function SignUp({ onLogin }) {
         <img src="/img/DevTrack_Logo_Png.png" alt="Logo" className="logo" />
 
         <h2>Registrarse</h2>
-        
+
         <form onSubmit={handleSubmit}>
           {/* Cedula input */}
           <div className="input-container">
             <label>Cédula:</label>
             <input
-              type="text"
+              type="number"
               value={cedula}
-              onChange={(e) => setCedula(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value >= 0) {
+                  setCedula(value);
+                }
+              }}
               required
             />
           </div>
@@ -68,8 +95,19 @@ function SignUp({ onLogin }) {
             <label>Correo Electrónico</label>
             <input
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={email}
+              onChange={(e) => {
+                const value = e.target.value;
+                setEmail(value);
+
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                  setError("Por favor, ingresa un correo electrónico válido.");
+                } else {
+                  setError(""); // Clear error if valid
+                }
+              }}
               required
             />
           </div>
@@ -78,14 +116,17 @@ function SignUp({ onLogin }) {
           <div className="input-container">
             <label>Teléfono</label>
             <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              type="number"
+              value={phone}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value >= 0) {
+                  setPhone(value);
+                }
+              }}
               required
             />
           </div>
-
-
 
           {/* Password input */}
           <div className="input-container">
@@ -101,8 +142,13 @@ function SignUp({ onLogin }) {
           {/* Error message */}
           {error && <p className="error">{error}</p>}
 
+          {/* Mensaje de éxito */}
+          {successMessage && <p className="success">{successMessage}</p>}
+
           {/* Login button */}
-          <button type="submit" className="login-btn">Enviar</button>
+          <button type="submit" className="login-btn">
+            Enviar
+          </button>
         </form>
 
         {/* Links */}
@@ -114,7 +160,10 @@ function SignUp({ onLogin }) {
 
         {/* Copyright */}
         <div className="footer">
-          <p>&copy; {new Date().getFullYear()} DevTrack. Todos los derechos reservados.</p>
+          <p>
+            &copy; {new Date().getFullYear()} DevTrack. Todos los derechos
+            reservados.
+          </p>
         </div>
       </div>
 

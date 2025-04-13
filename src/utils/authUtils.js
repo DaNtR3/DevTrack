@@ -5,6 +5,7 @@ export const verifyToken = async () => {
     const response = await api.verifyToken();
     if (response.data.success) {
       return { isAuthenticated: true, user: response.data.user }; // Return authentication status and user data
+      
     } else {
       return { isAuthenticated: false }; // Return unauthenticated status
     }

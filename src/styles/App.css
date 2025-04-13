@@ -21,6 +21,13 @@ header .header-content {
   align-items: center;
 }
 
+header nav ul {
+  margin: 15px; /* Remove any extra margin */
+  padding: 0; /* Remove any extra padding */
+  display: flex; /* Ensure the items are in a row */
+  align-items: center; /* Align the navigation items vertically with the logo */
+}
+
 header .logo {
   width: 150px; /* Logo width */
   height: auto; /* Auto height to maintain aspect ratio */
@@ -34,7 +41,7 @@ header h1 {
 
 /* Navigation Bar */
 nav {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 nav ul {
@@ -229,4 +236,15 @@ h1{
 
 p{
   font-size: 30px;
+}
+
+.sign-out-img {
+  width: 65px;
+  height: 65px;
+  cursor: pointer;
+  filter: invert(29%) sepia(91%) saturate(745%) hue-rotate(340deg) brightness(92%) contrast(95%);
+}
+
+.sign-out-img:hover {
+  filter: invert(39%) sepia(100%) saturate(1200%) hue-rotate(350deg) brightness(90%) contrast(100%);
 }

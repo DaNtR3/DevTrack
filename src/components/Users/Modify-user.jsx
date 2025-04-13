@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Form.css";
@@ -6,14 +6,33 @@ import api from "../../services/api";
 
 const ModifyUsers = ({ roleID }) => {
   const [cedula, setCedula] = useState("");
+  const [newcedula, setNewCedula] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [roleIDToBeAssigned, setRoleID] = useState(null);
+  const [roles, setRoles] = useState([]); // State to store roles from the database
+
+
+  // Fetch roles from the database
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await api.getRoles();
+        if (response.success) {
+          setRoles(response.roles);
+        }
+      } catch (err) {
+        console.error("Error fetching roles:", err);
+        setError("No se pudieron cargar los roles.");
+      }
+    };
+
+    fetchRoles();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,22 +40,23 @@ const ModifyUsers = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({
+      const result = await api.modifyUser({
         cedula,
+        newcedula,
         firstName,
         lastName,
         email,
         phone,
-        password,
+        roleIDToBeAssigned
       });
       console.log("API Response:", result);
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡Modificación exitosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "La modificación del usuario ha fallado"
       );
       console.error("Create user error:", err);
     }
@@ -52,9 +72,9 @@ const ModifyUsers = ({ roleID }) => {
         <div className="form-container">
           <form onSubmit={handleSubmit}>
             <h1>Modificar Usuario</h1>
-            {/* Cedula input */}
+            {/* Old Cedula input */}
             <div className="input-container">
-              <label>Cédula:</label>
+              <label>Cédula actual:</label>
               <input
                 type="number"
                 value={cedula}
@@ -62,6 +82,22 @@ const ModifyUsers = ({ roleID }) => {
                   const value = e.target.value;
                   if (value >= 0) {
                     setCedula(value);
+                  }
+                }}
+                required
+              />
+            </div>
+
+            {/* New Cedula input */}
+            <div className="input-container">
+              <label>Nueva Cédula:</label>
+              <input
+                type="number"
+                value={newcedula}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value >= 0) {
+                    setNewCedula(value);
                   }
                 }}
                 required
@@ -129,17 +165,6 @@ const ModifyUsers = ({ roleID }) => {
                 required
               />
             </div>
-
-            {/* Password input */}
-            <div className="input-container">
-              <label>Contraseña:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
             {/* Role input */}
             <div className="input-container">
               <label>Rol:</label>
@@ -151,9 +176,11 @@ const ModifyUsers = ({ roleID }) => {
                 <option value="" disabled>
                   Selecciona un rol
                 </option>
-                <option value="1">Administrador</option>
-                <option value="2">Usuario</option>
-                <option value="3">Gerente</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -175,6 +202,7 @@ const ModifyUsers = ({ roleID }) => {
       <Footer />
     </div>
   );
+  
 };
 
 export default ModifyUsers;

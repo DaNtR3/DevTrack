@@ -7,11 +7,11 @@ import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Aisle.css";
 
-const Users = ({ roleID }) => {
+const Users = ({ roleID, checkAuthentication}) => {
   return (
     <div className="home-container">
       {/* Render the Header */}
-      <Header roleID={roleID} />
+      <Header roleID={roleID} checkAuthentication={checkAuthentication}/>
 
       {/* Navigation Bar (Aisles) */}
       <nav className="users-nav">

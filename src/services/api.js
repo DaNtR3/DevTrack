@@ -13,6 +13,22 @@ const api = {
       throw error;
     }
   },
+
+  logout: async () => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/auth/logout`, // Endpoint
+        {}, // No request body needed for logout
+        {
+          withCredentials: true, // Include cookies in the request
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   verifyToken: async () => {
     try {
       const response = await axios.get(`${API_URL}/auth/verify`, {
@@ -33,15 +49,242 @@ const api = {
     }
   },
 
-  resetUserPassword: async (userdata) => {
+  createRole: async (roleData) => {
     try {
-      const response = await axios.post(`${API_URL}/user/reset-password`, userdata);
+      const response = await axios.post(`${API_URL}/role/create`, roleData);
       return response.data;
     } catch (error) {
       throw error;
     }
   },
 
+  createGoal: async (goalData) => {
+    try {
+      const response = await axios.post(`${API_URL}/goal/create`, goalData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
+  createProject: async (projectData) => {
+    try {
+      const response = await axios.post(`${API_URL}/project/create`, projectData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  createTask: async (taskData) => {
+    try {
+      const response = await axios.post(`${API_URL}/task/create`, taskData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
+  modifyProject: async (projectData) => {
+    try {
+      const response = await axios.post(`${API_URL}/project/modify-project`, projectData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  modifyGoal: async (goalData) => {
+    try {
+      const response = await axios.post(`${API_URL}/goal/modify-goal`, goalData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  modifyTask: async (TaskData) => {
+    try {
+      const response = await axios.post(`${API_URL}/task/modify-task`, TaskData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
+  modifyRole: async (roleData) => {
+    try {
+      const response = await axios.post(`${API_URL}/role/modify-role`, roleData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteRole: async (roleData) => {
+    try {
+      const response = await axios.post(`${API_URL}/role/delete-role`, roleData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteTask: async (taskData) => {
+    try {
+      const response = await axios.post(`${API_URL}/task/delete-task`, taskData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteGoal: async (goalData) => {
+    try {
+      const response = await axios.post(`${API_URL}/goal/delete-goal`, goalData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteProject: async (roleData) => {
+    try {
+      const response = await axios.post(`${API_URL}/project/delete-project`, roleData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteTeam: async (teamData) => {
+    try {
+      const response = await axios.post(`${API_URL}/team/delete-team`, teamData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
+  deleteUser: async (userdata) => {
+    try {
+      const response = await axios.post(`${API_URL}/user/delete-user`, userdata);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  createUserWithRole: async (userdata) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/create-with-role`,
+        userdata
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  modifyUser: async (userdata) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/modify-user`,
+        userdata
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  resetUserPassword: async (userdata) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/reset-password`,
+        userdata
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getRoles: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/role/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getPermissions: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/permission/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getUsers: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getTeams: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/team/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getProjects: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/project/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getTasks: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/task/get`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  createTeam: async (teamData) => {
+    try {
+      const response = await axios.post(`${API_URL}/team/create`, teamData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  modifyTeam: async (teamData) => {
+    try {
+      const response = await axios.post(`${API_URL}/team/modify-team`, teamData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default api;

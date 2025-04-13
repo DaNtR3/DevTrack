@@ -1,15 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Form.css";
 import api from "../../services/api";
+import Select from "react-select";
 
 const CreateTeams = ({ roleID }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [permissionToBeAssigned, setPermission] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [usersToBeAssigned, setUser] = useState(null);
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      fontSize: "30px", // Adjust the font size of the dropdown
+    }),
+    option: (provided) => ({
+      ...provided,
+      fontSize: "30px", // Adjust the font size of the options
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      fontSize: "30px", // Adjust the font size of the selected tags
+    }),
+  };
+
+  // Fetch users from the database
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await api.getUsers();
+        if (response.success) {
+          setUsers(response.users);
+        }
+        console.log("API Response:", response.users);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("No se pudieron cargar los users.");
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,19 +51,19 @@ const CreateTeams = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
+      const result = await api.createTeam({name, description, usersToBeAssigned});
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡La creación del equipo ha sido existosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "¡La creación del equipo ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Create team error:", err);
     }
   };
+
 
   return (
     <div className="home-container">
@@ -62,27 +96,35 @@ const CreateTeams = ({ roleID }) => {
                 required
               />
             </div>
-            {/* Permissions input */}
+            {/* Users input */}
             <div className="input-container">
               <label>Miembros:</label>
-              <select
-                multiple
-                value={permissionToBeAssigned} // Array of selected permissions
-                onChange={(e) => {
-                  const selectedOptions = Array.from(
-                    e.target.selectedOptions
-                  ).map((option) => option.value);
-                  setPermission(selectedOptions); // Update state with selected permissions
+              <Select
+                isMulti
+                options={users.map((user) => ({
+                  value: user.id,
+                  label: user.name,
+                }))}
+                value={
+                  usersToBeAssigned
+                    ? users
+                        .filter((user) => usersToBeAssigned.includes(user.id))
+                        .map((user) => ({
+                          value: user.id,
+                          label: user.name,
+                        }))
+                    : []
+                }
+                onChange={(selectedOptions) => {
+                  const selectedValues = selectedOptions.map(
+                    (option) => option.value
+                  );
+                  setUser(selectedValues); // Update state with selected user IDs
                 }}
-                required
-              >
-                <option value="1">Usuario1</option>
-                <option value="2">Usuario2</option>
-                <option value="3">Usuario3</option>
-                <option value="4">Usuario4</option>
-                <option value="5">Usuario5</option>
-                <option value="6">Usuario6</option>
-              </select>
+                placeholder="Selecciona a los miembros..."
+                noOptionsMessage={() => "No hay más miembros disponibles"}
+                styles={customStyles}
+              />
             </div>
 
             {/* Error message */}

@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>&copy; {currentYear} DevTrack. All rights reserved.</p>
+        <p>&copy; {currentYear} DevTrack. Todos los derechos reservados.</p>
         <nav className="footer-nav">
         </nav>
       </div>

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Form.css";
 import api from "../../services/api";
 
-const CreateUsers = ({ roleID }) => {
+const CreateUsers = ({ roleID, checkAuthentication}) => {
   const [cedula, setCedula] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,8 +12,26 @@ const CreateUsers = ({ roleID }) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [roles, setRoles] = useState([]); // State to store roles from the database
   const [successMessage, setSuccessMessage] = useState("");
   const [roleIDToBeAssigned, setRoleID] = useState(null);
+
+
+  // Fetch roles from the database
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await api.getRoles();
+        if (response.success) {
+          setRoles(response.roles);
+        }
+      } catch (err) {
+        console.error("Error fetching roles:", err);
+        setError("No se pudieron cargar los roles.");
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,18 +39,19 @@ const CreateUsers = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({
+      const result = await api.createUserWithRole({
         cedula,
         firstName,
         lastName,
         email,
         phone,
         password,
+        roleIDToBeAssigned
       });
       console.log("API Response:", result);
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡Registro exitoso! Ahora puedes iniciar sesión."); // Set success message
       }
     } catch (err) {
       setError(
@@ -45,7 +64,7 @@ const CreateUsers = ({ roleID }) => {
   return (
     <div className="home-container">
       {/* Render the Header */}
-      <Header roleID={roleID} />
+      <Header roleID={roleID} checkAuthentication={checkAuthentication}/>
 
       {/* Main content of the Home page */}
       <main className="home-content">
@@ -151,9 +170,11 @@ const CreateUsers = ({ roleID }) => {
                 <option value="" disabled>
                   Selecciona un rol
                 </option>
-                <option value="1">Administrador</option>
-                <option value="2">Usuario</option>
-                <option value="3">Gerente</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.name}
+                  </option>
+                ))}
               </select>
             </div>
 

@@ -56,12 +56,13 @@ function App() {
     () => JSON.parse(localStorage.getItem("wasAuthenticated")) || false // Retrieve from localStorage
   );
   const [roleID, setRoleID] = useState(null);
+  
 
   const checkAuthentication = async () => {
+    let result = null; // Declare a variable to store the result
     try {
-      const result = await verifyToken(); // Call the utility function
+      result = await verifyToken(); // Call the utility function
       setIsAuthenticated(result.isAuthenticated); // Update the state based on the result
-
       if (result.isAuthenticated) {
         setWasAuthenticated(true); // Update the state
         localStorage.setItem("wasAuthenticated", true); // Persist to localStorage
@@ -82,6 +83,7 @@ function App() {
       }
     } finally {
       setIsLoading(false); // Set loading to false after the check
+      return result.user.id;
     }
   };
 
@@ -136,38 +138,39 @@ function App() {
               <Route
                 element={<ProtectedRoutes isAuthenticated={isAuthenticated} />}
               >
-                <Route path="/home" element={<Home roleID={roleID} />} />
+                
+                <Route path="/home" element={<Home roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* User routes */}
-                <Route path="/users" element={<Users roleID={roleID} />} />
-                <Route path="/users/create" element={<CreateUsers roleID={roleID} />} />
-                <Route path="/users/delete" element={<DeleteUsers roleID={roleID} />} />
-                <Route path="/users/modify" element={<ModifyUsers roleID={roleID} />} />
-                <Route path="/users/reset-password" element={<ResetPassword roleID={roleID} />} />
+                <Route path="/users" element={<Users roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/users/create" element={<CreateUsers roleID={roleID} checkAuthentication={checkAuthentication} />} />
+                <Route path="/users/delete" element={<DeleteUsers roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/users/modify" element={<ModifyUsers roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/users/reset-password" element={<ResetPassword roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* Role routes */}
-                <Route path="/roles" element={<Roles roleID={roleID} />} />
-                <Route path="/roles/create" element={<CreateRoles roleID={roleID} />} />
-                <Route path="/roles/delete" element={<DeleteRoles roleID={roleID} />} />
-                <Route path="/roles/modify" element={<ModifyRoles roleID={roleID} />} />
+                <Route path="/roles" element={<Roles roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/roles/create" element={<CreateRoles roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/roles/delete" element={<DeleteRoles roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/roles/modify" element={<ModifyRoles roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* Teams routes */}
-                <Route path="/teams" element={<Teams roleID={roleID} />} />
-                <Route path="/teams/create" element={<CreateTeams roleID={roleID} />} />
-                <Route path="/teams/delete" element={<DeleteTeams roleID={roleID} />} />
-                <Route path="/teams/modify" element={<ModifyTeams roleID={roleID} />} />
+                <Route path="/teams" element={<Teams roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/teams/create" element={<CreateTeams roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/teams/delete" element={<DeleteTeams roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/teams/modify" element={<ModifyTeams roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* Project routes */}
-                <Route path="/projects" element={<Projects roleID={roleID} />} />
-                <Route path="/projects/create" element={<CreateProjects roleID={roleID} />} />
-                <Route path="/projects/delete" element={<DeleteProjects roleID={roleID} />} />
-                <Route path="/projects/modify" element={<ModifyProjects roleID={roleID} />} />
+                <Route path="/projects" element={<Projects roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/projects/create" element={<CreateProjects roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/projects/delete" element={<DeleteProjects roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/projects/modify" element={<ModifyProjects roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* Tasks routes */}
-                <Route path="/tasks" element={<Tasks roleID={roleID} />} />
-                <Route path="/tasks/create" element={<CreateTasks roleID={roleID} />} />
-                <Route path="/tasks/delete" element={<DeleteTasks roleID={roleID} />} />
-                <Route path="/tasks/modify" element={<ModifyTasks roleID={roleID} />} />
+                <Route path="/tasks" element={<Tasks roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/tasks/create" element={<CreateTasks roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/tasks/delete" element={<DeleteTasks roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/tasks/modify" element={<ModifyTasks roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 {/* Goals routes */}
-                <Route path="/goals" element={<Goals roleID={roleID} />} />
-                <Route path="/goals/create" element={<CreateGoals roleID={roleID} />} />
-                <Route path="/goals/delete" element={<DeleteGoals roleID={roleID} />} />
-                <Route path="/goals/modify" element={<ModifyGoals roleID={roleID} />} />
+                <Route path="/goals" element={<Goals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/goals/create" element={<CreateGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/goals/delete" element={<DeleteGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/goals/modify" element={<ModifyGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
               </Route>
               <Route path="*" element={<NotFound />} />
               {/* Catch-all for authenticated users */}

@@ -4,7 +4,7 @@ import "../../styles/Login.css"; // Import the CSS file for styling
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
-function SignUp({ onLogin }) {
+function SignUp() {
   const navigate = useNavigate(); // Initialize useNavigate
   const [cedula, setCedula] = useState("");
   const [firstName, setFirstName] = useState("");

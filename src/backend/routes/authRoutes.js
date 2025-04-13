@@ -6,5 +6,6 @@ const authMiddleware = require('../middleware/authMiddleware'); // Middleware to
 // api/auth/login
 router.post('/login', authController.login);
 router.get('/verify', authMiddleware.verifyToken);
+router.post('/logout', authController.logout);
 
 module.exports = router;

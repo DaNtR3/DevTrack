@@ -2,7 +2,6 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-
 exports.login = async (req, res) => {
   const { cedula, password } = req.body;
 
@@ -13,16 +12,16 @@ exports.login = async (req, res) => {
     if (user) {
       // Generate a JWT token
       const token = jwt.sign(
-        { id: user.usuarioid, roleID: user.rolID}, // Payload
+        { id: user.usuarioid, roleID: user.rolID }, // Payload
         process.env.JWT_SECRET, // Secret key
-        { expiresIn: '10m' } // Token expiration (5 minutes)
+        { expiresIn: "10m" } // Token expiration (5 minutes)
       );
 
       // Set the token in an HTTP-only cookie
-      res.cookie('token', token, {
+      res.cookie("token", token, {
         httpOnly: true, // Prevent access via JavaScript
-        secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
-        sameSite: 'Strict', // Prevent CSRF
+        secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+        sameSite: "Strict", // Prevent CSRF
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       });
 
@@ -40,14 +39,47 @@ exports.login = async (req, res) => {
       // Invalid credentials
       res.status(401).json({
         success: false,
-        message: 'Cédula o contraseña incorrecta',
+        message: "Cédula o contraseña incorrecta",
       });
     }
   } catch (err) {
-    console.error('Login error:', err);
+    console.error("Login error:", err);
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: "Server error",
+    });
+  }
+};
+
+exports.logout = (req, res) => {
+  try {
+    const token = req.cookies.token; // Extract the token cookie
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: "No token found in cookies",
+      });
+    }
+
+    // Clear the token cookie by setting its expiration to 0
+    res.cookie("token", "", {
+      httpOnly: true, // Prevent access via JavaScript
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "Strict", // Prevent CSRF
+      expires: new Date(0), // Expire the cookie immediately
+    });
+
+    // Send a success response
+    res.json({
+      success: true,
+      message: "Successfully logged out",
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error during logout",
     });
   }
 };

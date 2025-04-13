@@ -15,17 +15,18 @@ const DeleteProjects = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
+      const result = await api.deleteProject({
+        name
+      });
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡La eliminación del proyecto ha sido existosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "¡La eliminación del proyecto ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Delete project error:", err);
     }
   };
 

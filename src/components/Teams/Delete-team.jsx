@@ -8,7 +8,6 @@ const DeleteTeams = ({ roleID }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [permissionToBeAssigned, setPermission] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,17 +15,16 @@ const DeleteTeams = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
+      const result = await api.deleteTeam({name});
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡La eliminación del equipo ha sido existosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "¡La eliminación del equipo ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Delete team error:", err);
     }
   };
 

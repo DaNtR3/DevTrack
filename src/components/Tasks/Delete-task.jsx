@@ -6,16 +6,8 @@ import api from "../../services/api";
 
 const DeleteTasks = ({ roleID }) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [priority, setPriority] = useState("");
-  const [estimatedhours, setEstimatedHours] = useState(""); 
-  const [realhours, setRealHours] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
-  const [UserToBeAssigned, setUser] = useState(null);
-  const [relatedproject, setProject] = useState(null);
-  const [status, setStatus] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,17 +15,18 @@ const DeleteTasks = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
+      const result = await api.deleteTask({
+        title
+      });
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡La eliminación de la tarea ha sido existosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "¡La eliminación de la tarea ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Delete task error:", err);
     }
   };
 

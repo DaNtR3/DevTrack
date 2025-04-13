@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Form.css";
@@ -6,33 +6,66 @@ import api from "../../services/api";
 
 const ModifyGoals = ({ roleID }) => {
   const [title, setTitle] = useState("");
+  const [newtitle, setNewTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [deadline, setDeadline] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [type, setType] = useState(""); // State for the first dropdown (Project or Task)
-  const [items, setItems] = useState([]); // State for the dynamically updated list
+  const [tasks, setTasks] = useState([]); // State for tasks
+  const [projects, setProjects] = useState([]); // State for projects
   const [selectedItem, setSelectedItem] = useState(""); // State for the selected item
+
+  // Fetch tasks and projects once when the component mounts
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [tasksResponse, projectsResponse] = await Promise.all([
+            api.getTasks(),
+            api.getProjects(),
+          ]);
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccessMessage("");
-
-    try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
-
-      if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+          if (tasksResponse.success) {
+            setTasks(tasksResponse.tasks);
+          }
+  
+          if (projectsResponse.success) {
+            setProjects(projectsResponse.projects);
+          }
+        } catch (err) {
+          console.error("Error fetching data:", err);
+          setError("No se pudieron cargar los datos.");
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setError("");
+      setSuccessMessage("");
+  
+      try {
+        const result = await api.modifyGoal({
+          title,
+          newtitle,
+          description,
+          deadline,
+          type,
+          selectedItem
+        });
+  
+        if (result.success) {
+          setSuccessMessage("¡La modificación del objetivo ha sido existosa!"); // Set success message
+        }
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "¡La modificación del objetivo ha fallado"
+        );
+        console.error("Modify goal error:", err);
       }
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
-      );
-      console.error("Create user error:", err);
-    }
-  };
+    };
 
   return (
     <div className="home-container">
@@ -44,13 +77,24 @@ const ModifyGoals = ({ roleID }) => {
         <div className="form-container">
           <form onSubmit={handleSubmit}>
             <h1>Modificar Objetivo</h1>
-            {/* Title input */}
+            {/* Old Title input */}
             <div className="input-container">
-              <label>Titulo</label>
+              <label>Titulo actual</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* New Title input */}
+            <div className="input-container">
+              <label>Nuevo Titulo</label>
+              <input
+                type="text"
+                value={newtitle}
+                onChange={(e) => setNewTitle(e.target.value)}
                 required
               />
             </div>
@@ -72,16 +116,21 @@ const ModifyGoals = ({ roleID }) => {
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
+                min={new Date().toISOString().split("T")[0]} // Set today's date as the minimum
                 required
               />
             </div>
 
-            {/* Type dropdown */}
+            {/* Tipo (Proyecto o Tarea) */}
             <div className="input-container">
               <label>Tipo:</label>
               <select
                 value={type}
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => {
+                  const newType = e.target.value;
+                  setType(newType);
+                  setSelectedItem(""); // Clear selected item when type changes
+                }}
                 required
               >
                 <option value="" disabled>
@@ -92,11 +141,12 @@ const ModifyGoals = ({ roleID }) => {
               </select>
             </div>
 
-            {/* Dynamic dropdown */}
+            {/* Dropdown dinámico */}
             {type && (
               <div className="input-container">
                 <label>{type === "project" ? "Proyecto" : "Tarea"}:</label>
                 <select
+                  key={type} // Force re-render when type changes 
                   value={selectedItem}
                   onChange={(e) => setSelectedItem(e.target.value)}
                   required
@@ -104,7 +154,7 @@ const ModifyGoals = ({ roleID }) => {
                   <option value="" disabled>
                     Selecciona un {type === "project" ? "proyecto" : "tarea"}
                   </option>
-                  {items.map((item) => (
+                  {(type === "project" ? projects : tasks).map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
                     </option>
@@ -112,7 +162,6 @@ const ModifyGoals = ({ roleID }) => {
                 </select>
               </div>
             )}
-
 
             {/* Error message */}
             {error && <p className="error">{error}</p>}

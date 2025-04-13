@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import "../../styles/Form.css";
@@ -6,6 +6,7 @@ import api from "../../services/api";
 
 const ModifyTasks = ({ roleID }) => {
   const [title, setTitle] = useState("");
+  const [newtitle, setNewTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [deadline, setDeadline] = useState("");
@@ -13,9 +14,46 @@ const ModifyTasks = ({ roleID }) => {
   const [estimatedhours, setEstimatedHours] = useState(""); 
   const [realhours, setRealHours] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
-  const [UserToBeAssigned, setUser] = useState(null);
-  const [relatedproject, setProject] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [usersToBeAssigned, setUser] = useState(null);
+  const [projectToBeAssigned, setProject] = useState(null);
+  const [projects, setProjects] = useState([]);
   const [status, setStatus] = useState(null);
+
+
+  useEffect(() => {
+    // Fetch users from the database
+    const fetchUsers = async () => {
+      try {
+        const response = await api.getUsers();
+        if (response.success) {
+          setUsers(response.users);
+        }
+        console.log("API Response from users:", response.users);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setError("No se pudieron cargar los users.");
+      }
+
+  
+    };
+    // Fetch projects from the database
+    const fetchProjects= async () => {
+      try {
+        const response = await api.getProjects();
+        if (response.success) {
+          setProjects(response.projects);
+        }
+        console.log("API Response from projects:", response.projects);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+        setError("No se pudieron cargar los proyectos.");
+      }
+    };
+
+    fetchUsers();
+    fetchProjects();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,20 +61,29 @@ const ModifyTasks = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({});
-      console.log("API Response:", result);
+      const result = await api.modifyTask({
+        title,
+        newtitle,
+        description,
+        deadline,
+        priority,
+        status,
+        estimatedhours,
+        realhours,
+        projectToBeAssigned,
+        usersToBeAssigned
+      });
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡La modificación de la tarea ha sido existosa!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "¡La modificación de la tarea ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Modify task error:", err);
     }
   };
-
   return (
     <div className="home-container">
       {/* Render the Header */}
@@ -46,13 +93,24 @@ const ModifyTasks = ({ roleID }) => {
         <div className="form-container">
           <form onSubmit={handleSubmit}>
             <h1>Modificar Tarea</h1>
-            {/* Title input */}
+            {/* Old Title input */}
             <div className="input-container">
-              <label>Titulo</label>
+              <label>Titulo actual</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* New Title input */}
+            <div className="input-container">
+              <label>Nuevo Titulo</label>
+              <input
+                type="text"
+                value={newtitle}
+                onChange={(e) => setNewTitle(e.target.value)}
                 required
               />
             </div>
@@ -89,10 +147,10 @@ const ModifyTasks = ({ roleID }) => {
                 <option value="" disabled>
                   Selecciona un nivel de prioridad
                 </option>
-                <option value="1">Baja</option>
-                <option value="2">Media</option>
-                <option value="3">Alta</option>
-                <option value="4">Urgente</option> 
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+                <option value="Urgente">Urgente</option> 
               </select>
             </div>
 
@@ -107,10 +165,10 @@ const ModifyTasks = ({ roleID }) => {
                 <option value="" disabled>
                   Selecciona un estado
                 </option>
-                <option value="1">Pendiente</option>
-                <option value="2">En Proceso</option>
-                <option value="3">Revisión</option>
-                <option value="4">Completado</option> 
+                <option value="Pendiente">Pendiente</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Revisión">Revisión</option>
+                <option value="Completado">Completado</option> 
               </select>
             </div>
 
@@ -146,18 +204,21 @@ const ModifyTasks = ({ roleID }) => {
 
           {/* Project input */}
           <div className="input-container">
-              <label>Proyecto asociado:</label>
+              <label>Proyecto asignado:</label>
               <select
-                value={relatedproject}
+                value={projectToBeAssigned}
                 onChange={(e) => setProject(e.target.value)}
                 required
               >
                 <option value="" disabled>
                   Selecciona un proyecto
                 </option>
-                <option value="1">Proyecto1</option>
-                <option value="2">Proyecto1</option>
-                <option value="3">Proyecto1</option>
+                <option value="unassigned">Sin Asignar</option> {/* Extra option for unassigned */}
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -165,16 +226,19 @@ const ModifyTasks = ({ roleID }) => {
             <div className="input-container">
               <label>Usuario asignado:</label>
               <select
-                value={UserToBeAssigned}
+                value={usersToBeAssigned}
                 onChange={(e) => setUser(e.target.value)}
                 required
               >
                 <option value="" disabled>
                   Selecciona un usuario
                 </option>
-                <option value="1">Usuario1</option>
-                <option value="2">Usuario1</option>
-                <option value="3">Usuario1</option>
+                <option value="unassigned">Sin Asignar</option> {/* Extra option for unassigned */}
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
               </select>
             </div>
 

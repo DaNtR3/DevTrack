@@ -16,20 +16,17 @@ const DeleteUsers = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({
-        cedula,
-        email
-      });
+      const result = await api.deleteUser({cedula, email});
       console.log("API Response:", result);
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡Registro eliminado exitosamente!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "La eliminación del usuario ha fallado"
       );
-      console.error("Create user error:", err);
+      console.error("Delete user error:", err);
     }
   };
 

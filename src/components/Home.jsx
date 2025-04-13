@@ -3,11 +3,13 @@ import Header from "./Header"; // Adjust the path if necessary
 import Footer from "./Footer"; // Adjust the path if necessary
 import "../styles/App.css"; // Adjust the path if necessary
 
-const Home = ({roleID}) => {
+const Home = ({roleID, checkAuthentication}) => {
+
   return (
+    
     <div className="home-container">
       {/* Render the Header */}
-      <Header roleID={roleID}/>
+      <Header roleID={roleID} checkAuthentication={checkAuthentication} />
 
       {/* Main content of the Home page */}
       <main className="home-content">

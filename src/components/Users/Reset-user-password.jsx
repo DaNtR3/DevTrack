@@ -10,7 +10,6 @@ const ResetUsersPassword = ({ roleID }) => {
   const [confirmedpassword, setConfirmedPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
-  const [roleIDToBeAssigned, setRoleID] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,19 +17,21 @@ const ResetUsersPassword = ({ roleID }) => {
     setSuccessMessage("");
 
     try {
-      const result = await api.createUser({
+      const result = await api.resetUserPassword({
         cedula,
+        newpassword,
+        confirmedpassword,
       });
       console.log("API Response:", result);
 
       if (result.success) {
-        setSuccessMessage("¡Registro exitoso!"); // Set success message
+        setSuccessMessage("¡Contraseña actualizada exitosamente!"); // Set success message
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "La creación del usuario ha fallado"
+        err.response?.data?.message || "No se pudo reestablecer la contraseña del usuario"
       );
-      console.error("Create user error:", err);
+      console.error("Password reset failed:", err);
     }
   };
 

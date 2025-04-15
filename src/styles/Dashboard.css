@@ -1,0 +1,275 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f5f7;
+  }
+
+  .dashboard-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1700px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .table-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-bottom: 35px;
+    font-size: 20px;
+  }
+
+  footer {
+    margin-top: auto;
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid #eee;
+    text-align: center;
+  }
+
+
+/* Table Header */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Search Box */
+.search-box {
+  position: relative;
+}
+
+.search-input {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 250px;
+  font-size: 18px;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 16px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.data-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #444;
+  white-space: nowrap;
+}
+
+.data-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.column-actions {
+  width: 150px;
+}
+
+/* Cell Content */
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lead-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Buttons */
+.add-button {
+  padding: 8px 16px;
+  background: #ff7b00;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 18px;
+  
+}
+
+.add-button:hover {
+  background: black;
+  color: #ff7b00;
+  transform: scale(1.05);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;  /* Increased gap between buttons */
+  }
+
+.action-button {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #ff7b00;
+  cursor: pointer;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 18px;
+  min-width: 95px;  /* Ensure minimum width */
+  text-align: center;
+  transition: all 0.3s ease;
+  
+}
+
+.action-button:hover {
+    background: black;
+  color: #ff7b00;
+  transform: scale(1.05);  /* Slight grow effect on hover */
+  border-color: #ff7b00;
+}
+
+
+/* Pagination */
+.table-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: #666;
+  font-size: 18px;
+}
+
+.column-name {
+    min-width: 200px;
+  }
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+  }
+  
+  .status-badge.en-proceso,
+  .status-badge.en-progreso {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  .status-badge.media,
+  .status-badge.pendiente, 
+  .status-badge.pausado {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+  
+  .status-badge.baja,
+  .status-badge.completado {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+  .status-badge.urgente,
+  .status-badge.cancelado {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+  .status-badge.alta,
+  .status-badge.revisión,
+  .status-badge.planificado {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+  }
+
+  
+  /* Make the table horizontally scrollable on smaller screens */
+  .table-container {
+    overflow-x: auto;
+    margin: 1rem 0;
+    width: 100%;
+  }
+  
+  /* Ensure table cells maintain their shape */
+  .data-table td {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .table-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .column-actions {
+    width: auto;
+  }
+
+}

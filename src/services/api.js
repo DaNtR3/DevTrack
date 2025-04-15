@@ -86,6 +86,15 @@ const api = {
     }
   },
 
+  createComment: async (commentData) => {
+    try {
+      const response = await axios.post(`${API_URL}/comment/create`, commentData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 
   modifyProject: async (projectData) => {
     try {
@@ -224,6 +233,24 @@ const api = {
     }
   },
 
+  getCommentsFiltered: async (taskid) => {
+    try {
+      const response = await axios.post(`${API_URL}/comment/get-comment-filtered`, taskid);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getTasksFiltered: async (projectId) => {
+    try {
+      const response = await axios.post(`${API_URL}/task/get-task-filtered`, projectId);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getPermissions: async () => {
     try {
       const response = await axios.get(`${API_URL}/permission/get`);
@@ -259,6 +286,60 @@ const api = {
       throw error;
     }
   },
+
+  getProjectsInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/project/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getUsersInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/user/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getTasksInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/task/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getGoalsInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/goal/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getTeamsInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/team/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getRolesInfo: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/role/get-info`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getTasks: async () => {
     try {
       const response = await axios.get(`${API_URL}/task/get`);

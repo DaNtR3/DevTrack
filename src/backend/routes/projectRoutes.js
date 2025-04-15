@@ -5,6 +5,7 @@ const projectController = require('../controllers/projectController');
 
 // Get all projects data
 router.get('/get', projectController.getProjects);
+router.get('/get-info', projectController.getProjectsInfo);
 router.post('/create', projectController.createProject);
 router.post('/modify-project', projectController.modifyProject);
 router.post('/delete-project', projectController.deleteProject);

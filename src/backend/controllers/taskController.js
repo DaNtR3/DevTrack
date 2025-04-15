@@ -155,3 +155,45 @@ exports.deleteTask = async (req, res) => {
     });
   }
 };
+
+// Controller to fetch all projects
+exports.getTasksInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const tasks = await Task.getAllTasksInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      tasks,
+    });
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener las tareas.",
+    });
+  }
+};
+
+
+// Controller to fetch all projects
+exports.getTasksFiltered = async (req, res) => {
+  // Destructure projectId directly from req.body
+  const { projectId } = req.body;
+
+  try {
+    // Fetch all projects from the database
+    const tasks = await Task.getTasksFiltered(projectId);
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      tasks,
+    });
+  } catch (err) {
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener las tareas.",
+    });
+  }
+};

@@ -183,6 +183,31 @@ class Role {
       throw err;
     }
   }
+
+  static async getAllRolesInfo() {
+    try {
+      const result = await sql.query`
+       SELECT
+          r.RolID AS role_id,
+          COALESCE(r.Nombre, 'No asignado') AS role_name,
+          COALESCE(r.Descripcion, 'No asignado') AS rol_description,
+          COALESCE(p.Nombre, 'No asignado') AS permission_name,
+          COALESCE(p.Descripcion, 'No asignado') AS permission_description,
+          COALESCE(p.Modulo, 'No asignado') AS permission_module
+      FROM
+          Roles r
+          LEFT JOIN RolesPermisos rp ON r.RolID = rp.RolID
+          LEFT JOIN Permisos p ON rp.PermisoID = p.PermisoID
+      ORDER BY
+          r.RolID,
+          p.PermisoID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching projects from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
 }
 
 module.exports = Role;

@@ -11,6 +11,7 @@ const teamRoutes = require("./routes/teamRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const goalRoutes = require("./routes/goalRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 const app = express();
 app.use(cookieParser()); // Parse cookies
@@ -32,6 +33,7 @@ app.use("/api/team", teamRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/goal", goalRoutes);
+app.use("/api/comment", commentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

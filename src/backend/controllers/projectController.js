@@ -20,6 +20,26 @@ exports.getProjects = async (req, res) => {
   }
 };
 
+// Controller to fetch all projects
+exports.getProjectsInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const projects = await Project.getAllProjectsInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      projects,
+    });
+  } catch (err) {
+    console.error("Error fetching projects:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener los proyectos.",
+    });
+  }
+};
+
+
 exports.createProject = async (req, res) => {
   const {
     name,

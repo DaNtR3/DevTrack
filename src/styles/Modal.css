@@ -1,0 +1,49 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .modal-content h3{
+    color: #ff7b00;
+    font-size: 35px;
+  }
+  
+  .modal-close {
+    margin-top: 20px;
+    background-color: #ff7b00;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    font-size: 22px;
+    cursor: pointer;
+    font-family: "Bebas Neue", sans-serif;
+  }
+
+  .modal-close:hover{
+    background: black;
+    color: #ff7b00;
+  }
+  
+  .comment-entry {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  

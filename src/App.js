@@ -42,6 +42,14 @@ import Goals from "./components/Goals/Goals";
 import CreateGoals from "./components/Goals/Create-goal";
 import DeleteGoals from "./components/Goals/Delete-goal";
 import ModifyGoals from "./components/Goals/Modify-goal";
+/* Importing components for Dashboard */
+import ProjectDashboard from "./components/Dashboards/project_dashboard";
+import TaskDashboard from "./components/Dashboards/task_dashboard";
+import GoalDashboard from "./components/Dashboards/goal_dashboard";
+import UserDashboard from "./components/Dashboards/user_dashboard";
+import TeamDashboard from "./components/Dashboards/team_dashboard";
+import RoleDashboard from "./components/Dashboards/role_dashboard";
+import TaskFilteredDashboard from "./components/Dashboards/task_dashboard_Filtered";
 
 import PasswordReset from "./components/public/PasswordReset";
 import ProtectedRoutes from "./components/utils/ProtectedRoutes";
@@ -83,7 +91,9 @@ function App() {
       }
     } finally {
       setIsLoading(false); // Set loading to false after the check
-      return result.user.id;
+      if (result != null){
+        return result.user.id;
+      }
     }
   };
 
@@ -171,6 +181,14 @@ function App() {
                 <Route path="/goals/create" element={<CreateGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 <Route path="/goals/delete" element={<DeleteGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
                 <Route path="/goals/modify" element={<ModifyGoals roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                {/* Dashboard routes */}
+                <Route path="/projects/show" element={<ProjectDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/tasks/show" element={<TaskDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/goals/show" element={<GoalDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/users/show" element={<UserDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/teams/show" element={<TeamDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/roles/show" element={<RoleDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
+                <Route path="/tasks/filtered-tasks" element={<TaskFilteredDashboard roleID={roleID} checkAuthentication={checkAuthentication}/>} />
               </Route>
               <Route path="*" element={<NotFound />} />
               {/* Catch-all for authenticated users */}

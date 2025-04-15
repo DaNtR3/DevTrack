@@ -34,18 +34,6 @@ const Tasks = ({ roleID }) => {
           </li>
         </ul>
       </nav>
-
-      {/* Main Content */}
-      <main className="home-content">
-        {/*<Routes>
-          <Route path="/create" element={<CreateUser />} />
-          <Route path="/modify" element={<ModifyUser />} />
-          <Route path="/update" element={<UpdateUser />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-        </Routes>*/}
-      </main>
-
-      {/* Render the Footer */}
       <Footer />
     </div>
   );

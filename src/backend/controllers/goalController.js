@@ -102,3 +102,22 @@ exports.deleteGoal = async (req, res) => {
       });
     }
   };
+
+  // Controller to fetch all projects
+exports.getGoalsInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const goals = await Goal.getAllGoalsInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      goals,
+    });
+  } catch (err) {
+    console.error("Error fetching goals:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener los objetivos.",
+    });
+  }
+};

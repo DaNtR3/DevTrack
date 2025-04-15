@@ -190,6 +190,7 @@ const ModifyProjects = ({ roleID }) => {
                 <option value="" disabled>
                   Selecciona un equipo
                 </option>
+                <option value="unassigned">Sin Asignar</option>{" "}
                 {teams.map((team) => (
                   <option key={team.id} value={team.id}>
                     {team.name}

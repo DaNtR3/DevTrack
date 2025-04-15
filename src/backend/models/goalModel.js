@@ -113,6 +113,35 @@ class Goal {
       throw err;
     }
   }
+
+  static async getAllGoalsInfo() {
+    try {
+      const result = await sql.query`
+       SELECT
+            o.ObjetivoID as goal_id,
+            o.Titulo AS goal_title,
+            o.Descripcion AS goal_description,
+            o.FechaCreacion AS goal_creation_date,
+            o.FechaLimite AS goal_due_date,
+            COALESCE(p.Nombre, t.Titulo) AS associated_name,
+            CASE 
+                WHEN o.ProyectoID IS NOT NULL THEN 'Proyecto' 
+                WHEN o.TareaID IS NOT NULL THEN 'Tarea' 
+                ELSE 'Desconocido' 
+            END AS associated_to
+        FROM
+            Objetivos o
+            LEFT JOIN Proyectos p ON o.ProyectoID = p.ProyectoID
+            LEFT JOIN Tareas t ON o.TareaID = t.TareaID
+        ORDER BY
+            o.ObjetivoID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching projects from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
 }
 
 module.exports = Goal;

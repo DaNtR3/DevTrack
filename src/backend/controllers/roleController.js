@@ -123,3 +123,22 @@ exports.deleteRole = async (req, res) => {
     });
   }
 };
+
+// Controller to fetch all projects
+exports.getRolesInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const roles = await Role.getAllRolesInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      roles,
+    });
+  } catch (err) {
+    console.error("Error fetching roles:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener los roles.",
+    });
+  }
+};

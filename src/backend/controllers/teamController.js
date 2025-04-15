@@ -120,3 +120,22 @@ exports.deleteTeam = async (req, res) => {
     });
   }
 };
+
+// Controller to fetch all projects
+exports.getTeamsInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const teams = await Team.getAllTeamsInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      teams,
+    });
+  } catch (err) {
+    console.error("Error fetching teams:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener los equipos.",
+    });
+  }
+};

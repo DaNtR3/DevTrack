@@ -244,3 +244,22 @@ exports.getUsers = async (req, res) => {
     });
   }
 };
+
+// Controller to fetch all projects
+exports.getUsersInfo = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const users = await User.getAllUsersInfo();
+    // Send a success response with the teams data
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error del servidor al obtener los usuarios.",
+    });
+  }
+};

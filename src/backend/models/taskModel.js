@@ -184,6 +184,110 @@ class Task {
       throw err;
     }
   }
+
+  static async getAllTasksInfo() {
+    try {
+      const result = await sql.query`
+       SELECT
+            t.TareaID as taskid,
+            t.Titulo AS task_title,
+            t.Descripcion AS task_description,
+            t.FechaCreacion AS task_creation_date,
+            t.FechaLimite AS task_due_date,
+            t.Prioridad AS task_priority,
+            t.Estado AS task_status,
+            t.HorasEstimadas AS estimated_hours,
+            t.HorasReales AS actual_hours,
+            COALESCE(
+                CASE
+                    WHEN u1.Nombre IS NOT NULL
+                    AND u1.Apellido IS NOT NULL THEN CONCAT(u1.Nombre, ', ', u1.Apellido)
+                    WHEN u1.Nombre IS NOT NULL THEN u1.Nombre
+                    WHEN u1.Apellido IS NOT NULL THEN u1.Apellido
+                    ELSE 'No asignado'
+                END,
+                'No asignado'
+            ) AS assigned_to_name,
+            COALESCE(u1.Email, 'No asignado') AS assigned_to_email,
+            COALESCE(
+                CASE
+                    WHEN u2.Nombre IS NOT NULL
+                    AND u2.Apellido IS NOT NULL THEN CONCAT(u2.Nombre, ', ', u2.Apellido)
+                    WHEN u2.Nombre IS NOT NULL THEN u2.Nombre
+                    WHEN u2.Apellido IS NOT NULL THEN u2.Apellido
+                    ELSE 'No asignado'
+                END,
+                'No asignado'
+            ) AS created_by_name,
+            COALESCE(u2.Email, 'No asignado') AS created_by_email,
+            COALESCE(p.Nombre, 'No asignado') AS project_name
+        FROM
+            Tareas t
+            LEFT JOIN Proyectos p ON t.ProyectoID = p.ProyectoID
+            LEFT JOIN Usuarios u1 ON t.AsignadoA = u1.UsuarioID
+            LEFT JOIN Usuarios u2 ON t.CreadoPor = u2.UsuarioID
+        ORDER BY
+            t.TareaID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching projects from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
+
+  static async getTasksFiltered(projectId) {
+    try {
+      const result = await sql.query`
+       SELECT
+            t.TareaID as taskid,
+            t.Titulo AS task_title,
+            t.Descripcion AS task_description,
+            t.FechaCreacion AS task_creation_date,
+            t.FechaLimite AS task_due_date,
+            t.Prioridad AS task_priority,
+            t.Estado AS task_status,
+            t.HorasEstimadas AS estimated_hours,
+            t.HorasReales AS actual_hours,
+            COALESCE(
+                CASE
+                    WHEN u1.Nombre IS NOT NULL
+                    AND u1.Apellido IS NOT NULL THEN CONCAT(u1.Nombre, ', ', u1.Apellido)
+                    WHEN u1.Nombre IS NOT NULL THEN u1.Nombre
+                    WHEN u1.Apellido IS NOT NULL THEN u1.Apellido
+                    ELSE 'No asignado'
+                END,
+                'No asignado'
+            ) AS assigned_to_name,
+            COALESCE(u1.Email, 'No asignado') AS assigned_to_email,
+            COALESCE(
+                CASE
+                    WHEN u2.Nombre IS NOT NULL
+                    AND u2.Apellido IS NOT NULL THEN CONCAT(u2.Nombre, ', ', u2.Apellido)
+                    WHEN u2.Nombre IS NOT NULL THEN u2.Nombre
+                    WHEN u2.Apellido IS NOT NULL THEN u2.Apellido
+                    ELSE 'No asignado'
+                END,
+                'No asignado'
+            ) AS created_by_name,
+            COALESCE(u2.Email, 'No asignado') AS created_by_email,
+            COALESCE(p.Nombre, 'No asignado') AS project_name
+        FROM
+            Tareas t
+            LEFT JOIN Proyectos p ON t.ProyectoID = p.ProyectoID
+            LEFT JOIN Usuarios u1 ON t.AsignadoA = u1.UsuarioID
+            LEFT JOIN Usuarios u2 ON t.CreadoPor = u2.UsuarioID
+        WHERE
+            t.ProyectoID = ${projectId}
+        ORDER BY
+            t.TareaID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching tasks from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
 }
 
 module.exports = Task;

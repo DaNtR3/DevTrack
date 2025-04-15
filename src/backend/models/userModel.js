@@ -100,7 +100,15 @@ class User {
   }
 
   static async createWithRole(userData) {
-    const { cedula, firstName, lastName, email, phone, password, roleIDToBeAssigned } = userData;
+    const {
+      cedula,
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+      roleIDToBeAssigned,
+    } = userData;
     try {
       // Insert the user into the database with the specified roleID
       await sql.query`
@@ -115,9 +123,17 @@ class User {
       throw err;
     }
   }
-// Modify user data
+  // Modify user data
   static async modifyUser(userData) {
-    const { cedula, newcedula, firstName, lastName, email, phone, roleIDToBeAssigned } = userData;
+    const {
+      cedula,
+      newcedula,
+      firstName,
+      lastName,
+      email,
+      phone,
+      roleIDToBeAssigned,
+    } = userData;
     try {
       // Insert the new user data into the database
       await sql.query`
@@ -142,7 +158,7 @@ class User {
 
   // Delete user data
   static async deleteUser(userData) {
-    const {cedula, email} = userData;
+    const { cedula, email } = userData;
     try {
       // Delete the user data in the database
       await sql.query`
@@ -220,6 +236,26 @@ class User {
       throw err; // Throw the error to be handled by the controller
     }
   }
-  
+
+  static async getAllUsersInfo() {
+    try {
+      const result = await sql.query`
+       SELECT 
+          u.UsuarioID AS userid,
+          ISNULL(u.Nombre, 'No asignado') AS user_firstname,
+          ISNULL(u.Apellido, 'No asignado') AS user_lastname,
+          ISNULL(u.Email, 'No asignado') AS user_email,
+          ISNULL(u.Telefono, 'No asignado') AS user_phonenumber,
+          ISNULL(CONVERT(VARCHAR, u.FechaRegistro, 103), 'No asignado') AS FechaRegistro,
+          ISNULL(r.Nombre, 'No asignado') AS role_name
+      FROM Usuarios u
+      LEFT JOIN Roles r ON u.RolID = r.RolID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching users from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
 }
 module.exports = User;

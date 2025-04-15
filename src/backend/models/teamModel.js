@@ -138,6 +138,31 @@ class Team {
       throw err;
     }
   }
+
+  static async getAllTeamsInfo() {
+    try {
+      const result = await sql.query`
+        SELECT 
+            e.EquipoID as teamid,
+            e.Nombre AS team_name,
+            e.Descripcion AS team_description,
+            CASE 
+                WHEN u.Nombre IS NULL OR u.Apellido IS NULL THEN 'No asignado'
+                ELSE CONCAT(u.Nombre, ', ', u.Apellido)
+            END AS member_name,
+            ISNULL(u.Email, 'No asignado') AS member_email,
+            ISNULL(CONVERT(VARCHAR, ue.FechaAsignacion, 103), 'No asignado') AS assigned_date
+        FROM Equipos e
+        LEFT JOIN UsuariosEquipos ue ON e.EquipoID = ue.EquipoID
+        LEFT JOIN Usuarios u ON ue.UsuarioID = u.UsuarioID
+        ORDER BY e.EquipoID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching teams from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
 }
 
 module.exports = Team;

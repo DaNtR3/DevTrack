@@ -17,6 +17,33 @@ class Project {
     }
   }
 
+  static async getAllProjectsInfo() {
+    try {
+      const result = await sql.query`
+       SELECT 
+          p.ProyectoID as id,
+          p.Nombre AS name,
+          ISNULL(p.Descripcion, 'No asignado') AS description,
+          p.FechaInicio AS startdate,
+          ISNULL(CONVERT(VARCHAR, p.FechaFin, 23), 'No asignado') AS enddate,
+          p.Estado AS status,
+          ISNULL(CONVERT(VARCHAR, p.Presupuesto), 'No asignado') AS budget,
+          ISNULL(e.Nombre, 'No asignado') AS teamname,
+          CASE 
+              WHEN u.UsuarioID IS NULL THEN 'No asignado'
+              ELSE CONCAT(u.Nombre, ', ', u.Apellido)
+          END AS projectmanagername
+      FROM Proyectos p
+      LEFT JOIN Equipos e ON p.EquipoID = e.EquipoID
+      LEFT JOIN Usuarios u ON p.GerenteProyectoID = u.UsuarioID;
+    `;
+      return result.recordset;
+    } catch (err) {
+      console.error("Error fetching projects from the database:", err);
+      throw err; // Throw the error to be handled by the controller
+    }
+  }
+
   // Find a project by name
   static async findByName(projectName) {
     try {
